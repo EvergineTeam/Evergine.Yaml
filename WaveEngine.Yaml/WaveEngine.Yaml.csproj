@@ -1,24 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageId>SharpYaml</PackageId>
+    <PackageId>WaveEngine.Yaml</PackageId>
     <VersionPrefix>1.6.5</VersionPrefix>
-    <AssemblyName>SharpYaml</AssemblyName>
-    <AssemblyTitle>SharpYaml</AssemblyTitle>
+    <AssemblyName>WaveEngine.Yaml</AssemblyName>
+    <AssemblyTitle>WaveEngine.Yaml</AssemblyTitle>
     <RootNamespace>SharpYaml</RootNamespace>
-    <Description>A YAML portable .NET library. providing parsing and serialization of object graphs, compatible with CoreCLR.</Description>
-    <TargetFrameworks>net35;net45;netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>
-    <Authors>Alexandre Mutel</Authors>
-    <Copyright>Alexandre Mutel</Copyright>
+    <Description>A YAML portable .NET library. providing parsing and serialization of object graphs, compatible with CoreCLR. This package is also used by WaveEngine to provide its custom YAML serialization.</Description>
+    <!--<TargetFrameworks>net35;net45;netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>-->
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <Authors>Alexandre Mutel; Wave Engine Team</Authors>
+    <Copyright>Alexandre Mutel; Wave Engine Team</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageTags>yaml;parser;yml</PackageTags>
-    <PackageReleaseNotes>https://github.com/xoofx/SharpYaml/blob/master/changelog.md</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/xoofx/SharpYaml</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/xoofx/SharpYaml/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageReleaseNotes>https://github.com/WaveEngine/WaveEngine.Yaml/blob/master/changelog.md</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/WaveEngine/WaveEngine.Yaml</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/WaveEngine/WaveEngine.Yaml/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>git://github.com/xoofx/SharpYaml</RepositoryUrl>
+    <RepositoryUrl>git://github.com/WaveEngine/WaveEngine.Yaml</RepositoryUrl>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <PackageIconUrl>http://wave.blob.core.windows.net/$root/NugetWave.png</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
@@ -48,9 +50,9 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <NoWarn>CS1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyOriginatorKeyFile>..\SharpYaml.snk</AssemblyOriginatorKeyFile>
+    <!--<AssemblyOriginatorKeyFile>..\WaveEngine.Yaml.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>-->
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
