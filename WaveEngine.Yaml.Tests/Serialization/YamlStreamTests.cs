@@ -49,7 +49,7 @@ using System.Text;
 using NUnit.Framework;
 using SharpYaml.Serialization;
 
-namespace SharpYaml.Tests.Serialization
+namespace WaveEngine.Yaml.Tests.Serialization
 {
     public class YamlStreamTests : YamlTest
     {

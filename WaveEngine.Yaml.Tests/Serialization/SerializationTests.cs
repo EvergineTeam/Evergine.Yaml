@@ -53,11 +53,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
+using SharpYaml;
 using SharpYaml.Events;
 using SharpYaml.Serialization;
 using SharpYaml.Serialization.Serializers;
 
-namespace SharpYaml.Tests.Serialization
+namespace WaveEngine.Yaml.Tests.Serialization
 {
     public class SerializationTests : YamlTest
     {

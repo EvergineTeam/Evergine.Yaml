@@ -6,14 +6,15 @@ using NUnit.Framework;
 using SharpYaml.Events;
 using SharpYaml.Serialization;
 using SharpYaml.Model;
+using SharpYaml;
 using YamlStream = SharpYaml.Model.YamlStream;
 
-namespace SharpYaml.Tests {
+namespace WaveEngine.Yaml.Tests {
     public class YamlNodeTest {
         [Test]
         public void ReadYamlReference() {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("SharpYaml.Tests.files.YamlReferenceCard.yaml");
+                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.YamlReferenceCard.yaml");
 
             var fileStream = new StreamReader(file);
             var stream = YamlStream.Load(fileStream);
@@ -47,7 +48,7 @@ namespace SharpYaml.Tests {
         [Test]
         public void YamlValue() {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("SharpYaml.Tests.files.test6.yaml");
+                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test6.yaml");
 
             var fileStream = new StreamReader(file);
             var stream = YamlStream.Load(fileStream);
@@ -72,10 +73,10 @@ namespace SharpYaml.Tests {
         [Test]
         public void FromObject() {
             var stream = new YamlStream();
-            var document = new Model.YamlDocument();
+            var document = new SharpYaml.Model.YamlDocument();
             stream.Add(document);
 
-            var sequence = (YamlSequence)Model.YamlNode.FromObject(new[] { "item 4", "item 5", "item 6" }, new SerializerSettings { EmitAlias = false }, typeof(string[]));
+            var sequence = (YamlSequence)SharpYaml.Model.YamlNode.FromObject(new[] { "item 4", "item 5", "item 6" }, new SerializerSettings { EmitAlias = false }, typeof(string[]));
 
             sequence.SequenceStart = new SequenceStart(sequence.SequenceStart.Anchor, sequence.SequenceStart.Tag, true, YamlStyle.Flow);
 
@@ -91,7 +92,7 @@ namespace SharpYaml.Tests {
         [Test]
         public void DeepClone() {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("SharpYaml.Tests.files.test11.yaml");
+                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test11.yaml");
 
             var fileStream = new StreamReader(file);
             var stream = YamlStream.Load(fileStream);
@@ -117,7 +118,7 @@ namespace SharpYaml.Tests {
         [Test]
         public void MappingStringKey() {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("SharpYaml.Tests.files.test11.yaml");
+                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test11.yaml");
 
             var fileStream = new StreamReader(file);
             var stream = YamlStream.Load(fileStream);
@@ -134,7 +135,7 @@ namespace SharpYaml.Tests {
         [Test]
         public void AllowMissingKeyLookup() {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("SharpYaml.Tests.files.test11.yaml");
+                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test11.yaml");
 
             var fileStream = new StreamReader(file);
             var stream = YamlStream.Load(fileStream);
@@ -146,7 +147,7 @@ namespace SharpYaml.Tests {
         [Test]
         public void ToStringTest() {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("SharpYaml.Tests.files.test8.yaml");
+                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test8.yaml");
 
             var fileStream = new StreamReader(file);
             var stream = YamlStream.Load(fileStream);
@@ -159,7 +160,7 @@ namespace SharpYaml.Tests {
         [Test]
         public void StyleTest() {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("SharpYaml.Tests.files.test10.yaml");
+                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test10.yaml");
 
             var fileStream = new StreamReader(file);
             var stream = YamlStream.Load(fileStream);
@@ -181,7 +182,7 @@ namespace SharpYaml.Tests {
         [Test]
         public void TagTest() {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("SharpYaml.Tests.files.dictionaryExplicit.yaml");
+                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.dictionaryExplicit.yaml");
 
             var fileStream = new StreamReader(file);
             var stream = YamlStream.Load(fileStream);
@@ -202,7 +203,7 @@ namespace SharpYaml.Tests {
         [Test]
         public void ScalarStyleTest() {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("SharpYaml.Tests.files.test6.yaml");
+                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test6.yaml");
 
             var fileStream = new StreamReader(file);
             var stream = YamlStream.Load(fileStream);
@@ -220,7 +221,7 @@ namespace SharpYaml.Tests {
         [Test]
         public void IsCanonicalTest() {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("SharpYaml.Tests.files.test6.yaml");
+                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test6.yaml");
 
             var fileStream = new StreamReader(file);
             var stream = YamlStream.Load(fileStream);

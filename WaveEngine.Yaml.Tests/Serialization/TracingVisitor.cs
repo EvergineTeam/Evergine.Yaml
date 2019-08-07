@@ -46,7 +46,7 @@
 using System;
 using SharpYaml.Serialization;
 
-namespace SharpYaml.Tests.Serialization
+namespace WaveEngine.Yaml.Tests.Serialization
 {
     public class TracingVisitor : YamlVisitor
     {

@@ -45,9 +45,10 @@
 
 using System.Collections;
 using NUnit.Framework;
+using SharpYaml;
 using SharpYaml.Events;
 
-namespace SharpYaml.Tests
+namespace WaveEngine.Yaml.Tests
 {
     public class ParserTests : ParserTestHelper
     {

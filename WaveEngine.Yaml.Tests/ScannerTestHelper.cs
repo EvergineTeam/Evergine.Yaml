@@ -43,9 +43,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using SharpYaml;
 using SharpYaml.Tokens;
 
-namespace SharpYaml.Tests
+namespace WaveEngine.Yaml.Tests
 {
     public class ScannerTestHelper : YamlTest
     {

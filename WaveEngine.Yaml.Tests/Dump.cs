@@ -45,7 +45,7 @@
 
 using System.Diagnostics;
 
-namespace SharpYaml.Tests
+namespace WaveEngine.Yaml.Tests
 {
     public class Dump
     {

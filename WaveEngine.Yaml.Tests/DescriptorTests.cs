@@ -53,7 +53,7 @@ using NUnit.Framework;
 using SharpYaml.Serialization;
 using SharpYaml.Serialization.Descriptors;
 
-namespace SharpYaml.Tests
+namespace WaveEngine.Yaml.Tests
 {
     public class DescriptorTests
     {

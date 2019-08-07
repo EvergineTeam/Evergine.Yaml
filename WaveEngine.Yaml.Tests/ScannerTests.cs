@@ -44,9 +44,10 @@
 // SOFTWARE.
 
 using NUnit.Framework;
+using SharpYaml;
 using SharpYaml.Tokens;
 
-namespace SharpYaml.Tests
+namespace WaveEngine.Yaml.Tests
 {
     public class ScannerTests : ScannerTestHelper
     {

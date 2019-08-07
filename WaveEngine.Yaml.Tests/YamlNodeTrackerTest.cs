@@ -4,12 +4,12 @@ using NUnit.Framework;
 using SharpYaml.Model;
 using YamlStream = SharpYaml.Model.YamlStream;
 
-namespace SharpYaml.Tests {
+namespace WaveEngine.Yaml.Tests {
     public class YamlNodeTrackerTest {
         [Test]
         public void DeserializeTest() {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("SharpYaml.Tests.files.test11.yaml");
+                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test11.yaml");
 
             var childrenAdded = 0;
 
@@ -31,7 +31,7 @@ namespace SharpYaml.Tests {
         [Test]
         public void ValueSetTest() {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("SharpYaml.Tests.files.test4.yaml");
+                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test4.yaml");
 
             var childrenAdded = 0;
 
@@ -60,7 +60,7 @@ namespace SharpYaml.Tests {
             Assert.AreEqual("a silly scalar", valueChanged.NewValue);
             Assert.AreEqual(stream[0].Contents, valueChanged.Node);
             Assert.AreEqual(1, valueChanged.ParentPaths.Count);
-            Assert.AreEqual(new Model.Path(stream, new []{ new ChildIndex(0, false), new ChildIndex(-1, false) }),  valueChanged.ParentPaths[0]);
+            Assert.AreEqual(new SharpYaml.Model.Path(stream, new []{ new ChildIndex(0, false), new ChildIndex(-1, false) }),  valueChanged.ParentPaths[0]);
         }
 
 
@@ -87,7 +87,7 @@ namespace SharpYaml.Tests {
             // In .NET versions higher than 3.5, the parents dictionary is replaced with
             // ConditionalWeakTable, allowing tracked YAML nodes to be freed properly.
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("SharpYaml.Tests.files.test4.yaml");
+                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test4.yaml");
 
             var childrenAdded = 0;
 
@@ -118,7 +118,7 @@ namespace SharpYaml.Tests {
         [Test]
         public void SubscriberTest() {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("SharpYaml.Tests.files.test12.yaml");
+                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test12.yaml");
 
             var childrenAdded = 0;
 
@@ -172,7 +172,7 @@ namespace SharpYaml.Tests {
             Assert.IsTrue(receivedArgs is MappingPairAdded);
             Assert.AreEqual(TrackerEventType.MappingPairAdded, ((MappingPairAdded) receivedArgs).EventType);
             Assert.AreEqual(0, ((MappingPairAdded)receivedArgs).Index);
-            Assert.AreEqual(new Model.Path(stream, new [] { new ChildIndex(0, false), new ChildIndex(-1, false) }), ((MappingPairAdded)receivedArgs).ParentPaths[0]);
+            Assert.AreEqual(new SharpYaml.Model.Path(stream, new [] { new ChildIndex(0, false), new ChildIndex(-1, false) }), ((MappingPairAdded)receivedArgs).ParentPaths[0]);
             Assert.AreEqual("A", ((MappingPairAdded)receivedArgs).Child.Key.ToString());
             Assert.AreEqual("5", ((MappingPairAdded) receivedArgs).Child.Value.ToString());
         }

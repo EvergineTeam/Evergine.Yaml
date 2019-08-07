@@ -43,6 +43,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using SharpYaml;
 using SharpYaml.Events;
 using SharpYaml.Tokens;
 using AnchorAlias = SharpYaml.Events.AnchorAlias;
@@ -52,7 +53,7 @@ using Scalar = SharpYaml.Events.Scalar;
 using StreamEnd = SharpYaml.Events.StreamEnd;
 using StreamStart = SharpYaml.Events.StreamStart;
 
-namespace SharpYaml.Tests
+namespace WaveEngine.Yaml.Tests
 {
     public class ParserTestHelper : YamlTest
     {

@@ -46,8 +46,9 @@
 using System;
 using System.IO;
 using NUnit.Framework;
+using SharpYaml;
 
-namespace SharpYaml.Tests
+namespace WaveEngine.Yaml.Tests
 {
     public class LookAheadBufferTests
     {

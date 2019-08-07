@@ -53,10 +53,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Policy;
 using NUnit.Framework;
+using SharpYaml;
 using SharpYaml.Serialization;
 using SharpYaml.Serialization.Serializers;
 
-namespace SharpYaml.Tests.Serialization
+namespace WaveEngine.Yaml.Tests.Serialization
 {
     [TestFixture]
     public class SerializationTests2

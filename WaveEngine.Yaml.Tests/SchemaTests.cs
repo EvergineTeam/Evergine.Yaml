@@ -45,10 +45,11 @@
 
 using System;
 using NUnit.Framework;
+using SharpYaml;
 using SharpYaml.Events;
 using SharpYaml.Schemas;
 
-namespace SharpYaml.Tests
+namespace WaveEngine.Yaml.Tests
 {
     public class SchemaTests
     {

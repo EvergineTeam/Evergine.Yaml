@@ -49,10 +49,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using SharpYaml;
 using SharpYaml.Events;
 using SharpYaml.Serialization;
 
-namespace SharpYaml.Tests
+namespace WaveEngine.Yaml.Tests
 {
     public class EmitterTests : YamlTest
     {
