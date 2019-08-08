@@ -65,7 +65,20 @@ namespace SharpYaml.Serialization.Descriptors
         /// <param name="namingConvention">The naming convention.</param>
         /// <exception cref="System.ArgumentException">Expecting arrat type;type</exception>
         public ArrayDescriptor(IAttributeRegistry attributeRegistry, Type type, IMemberNamingConvention namingConvention)
-            : base(attributeRegistry, type, false, namingConvention)
+            : this(attributeRegistry, type, false, namingConvention)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObjectDescriptor" /> class.
+        /// </summary>
+        /// <param name="attributeRegistry">The attribute registry.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="ignoreGetters">If set to <c>true</c> the properties without setter will be ignored</param>
+        /// <param name="namingConvention">The naming convention.</param>
+        /// <exception cref="System.ArgumentException">Expecting arrat type;type</exception>
+        public ArrayDescriptor(IAttributeRegistry attributeRegistry, Type type, bool ignoreGetters, IMemberNamingConvention namingConvention)
+            : base(attributeRegistry, type, false, ignoreGetters, namingConvention)
         {
             if (!type.IsArray)
                 throw new ArgumentException("Expecting array type", "type");

@@ -56,6 +56,7 @@ namespace SharpYaml.Serialization.Descriptors
         private readonly IAttributeRegistry attributeRegistry;
         private readonly Dictionary<Type, ITypeDescriptor> registeredDescriptors = new Dictionary<Type, ITypeDescriptor>();
         private readonly bool emitDefaultValues;
+        private readonly bool ignoreGetters;
         private readonly IMemberNamingConvention namingConvention;
 
         /// <summary>
@@ -63,9 +64,10 @@ namespace SharpYaml.Serialization.Descriptors
         /// </summary>
         /// <param name="attributeRegistry">The attribute registry.</param>
         /// <param name="emitDefaultValues">if set to <c>true</c> [emit default values].</param>
+        /// <param name="ignoreGetters">If set to <c>true</c> the properties without setter will be ignored</param>
         /// <param name="namingConvention">The naming convention.</param>
         /// <exception cref="System.ArgumentNullException">attributeRegistry</exception>
-        public TypeDescriptorFactory(IAttributeRegistry attributeRegistry, bool emitDefaultValues, IMemberNamingConvention namingConvention)
+        public TypeDescriptorFactory(IAttributeRegistry attributeRegistry, bool emitDefaultValues, bool ignoreGetters, IMemberNamingConvention namingConvention)
         {
             if (attributeRegistry == null)
                 throw new ArgumentNullException("attributeRegistry");
@@ -73,6 +75,7 @@ namespace SharpYaml.Serialization.Descriptors
                 throw new ArgumentNullException("namingConvention");
             this.namingConvention = namingConvention;
             this.emitDefaultValues = emitDefaultValues;
+            this.ignoreGetters = ignoreGetters;
             this.attributeRegistry = attributeRegistry;
         }
 
@@ -128,17 +131,17 @@ namespace SharpYaml.Serialization.Descriptors
             else if (DictionaryDescriptor.IsDictionary(type)) // resolve dictionary before collections, as they are also collections
             {
                 // IDictionary
-                descriptor = new DictionaryDescriptor(attributeRegistry, type, emitDefaultValues, namingConvention);
+                descriptor = new DictionaryDescriptor(attributeRegistry, type, emitDefaultValues, ignoreGetters, namingConvention);
             }
             else if (CollectionDescriptor.IsCollection(type))
             {
                 // ICollection
-                descriptor = new CollectionDescriptor(attributeRegistry, type, emitDefaultValues, namingConvention);
+                descriptor = new CollectionDescriptor(attributeRegistry, type, emitDefaultValues, ignoreGetters, namingConvention);
             }
             else if (type.IsArray)
             {
                 // array[]
-                descriptor = new ArrayDescriptor(attributeRegistry, type, namingConvention);
+                descriptor = new ArrayDescriptor(attributeRegistry, type, ignoreGetters, namingConvention);
             }
             else if (NullableDescriptor.IsNullable(type))
             {
@@ -147,7 +150,7 @@ namespace SharpYaml.Serialization.Descriptors
             else
             {
                 // standard object (class or value type)
-                descriptor = new ObjectDescriptor(attributeRegistry, type, emitDefaultValues, namingConvention);
+                descriptor = new ObjectDescriptor(attributeRegistry, type, emitDefaultValues, ignoreGetters, namingConvention);
             }
 
             // Initialize the descriptor

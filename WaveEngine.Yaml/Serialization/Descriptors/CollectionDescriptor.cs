@@ -56,7 +56,7 @@ namespace SharpYaml.Serialization.Descriptors
     /// </summary>
     public class CollectionDescriptor : ObjectDescriptor
     {
-        private static readonly List<string> ListOfMembersToRemove = new List<string> {"Capacity", "Count", "IsReadOnly", "IsFixedSize", "IsSynchronized", "SyncRoot", "Comparer"};
+        private static readonly List<string> ListOfMembersToRemove = new List<string> { "Capacity", "Count", "IsReadOnly", "IsFixedSize", "IsSynchronized", "SyncRoot", "Comparer" };
 
         private readonly Func<object, bool> IsReadOnlyFunction;
         private readonly Func<object, int> GetCollectionCountFunction;
@@ -72,7 +72,21 @@ namespace SharpYaml.Serialization.Descriptors
         /// <param name="namingConvention">The naming convention.</param>
         /// <exception cref="System.ArgumentException">Expecting a type inheriting from System.Collections.ICollection;type</exception>
         public CollectionDescriptor(IAttributeRegistry attributeRegistry, Type type, bool emitDefaultValues, IMemberNamingConvention namingConvention)
-            : base(attributeRegistry, type, emitDefaultValues, namingConvention)
+            : this(attributeRegistry, type, emitDefaultValues, false, namingConvention)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CollectionDescriptor" /> class.
+        /// </summary>
+        /// <param name="attributeRegistry">The attribute registry.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="emitDefaultValues">if set to <c>true</c> [emit default values].</param>
+        /// <param name="ignoreGetters">If set to <c>true</c> the properties without setter will be ignored</param>
+        /// <param name="namingConvention">The naming convention.</param>
+        /// <exception cref="System.ArgumentException">Expecting a type inheriting from System.Collections.ICollection;type</exception>
+        public CollectionDescriptor(IAttributeRegistry attributeRegistry, Type type, bool emitDefaultValues, bool ignoreGetters, IMemberNamingConvention namingConvention)
+        : base(attributeRegistry, type, emitDefaultValues, ignoreGetters, namingConvention)
         {
             if (!IsCollection(type))
                 throw new ArgumentException("Expecting a type inheriting from System.Collections.ICollection", "type");
@@ -85,20 +99,20 @@ namespace SharpYaml.Serialization.Descriptors
             Type itype;
             if ((itype = type.GetInterface(typeof(ICollection<>))) != null)
             {
-                var add = itype.GetMethod("Add", new[] {ElementType});
-                CollectionAddFunction = (obj, value) => add.Invoke(obj, new[] {value});
+                var add = itype.GetMethod("Add", new[] { ElementType });
+                CollectionAddFunction = (obj, value) => add.Invoke(obj, new[] { value });
                 var countMethod = itype.GetProperty("Count").GetGetMethod();
-                GetCollectionCountFunction = o => (int) countMethod.Invoke(o, null);
+                GetCollectionCountFunction = o => (int)countMethod.Invoke(o, null);
                 var isReadOnly = itype.GetProperty("IsReadOnly").GetGetMethod();
-                IsReadOnlyFunction = obj => (bool) isReadOnly.Invoke(obj, null);
+                IsReadOnlyFunction = obj => (bool)isReadOnly.Invoke(obj, null);
                 isKeyedCollection = type.ExtendsGeneric(typeof(KeyedCollection<,>));
             }
             // implements IList 
             else if (typeof(IList).IsAssignableFrom(type))
             {
-                CollectionAddFunction = (obj, value) => ((IList) obj).Add(value);
-                GetCollectionCountFunction = o => ((IList) o).Count;
-                IsReadOnlyFunction = obj => ((IList) obj).IsReadOnly;
+                CollectionAddFunction = (obj, value) => ((IList)obj).Add(value);
+                GetCollectionCountFunction = o => ((IList)o).Count;
+                IsReadOnlyFunction = obj => ((IList)obj).IsReadOnly;
             }
         }
 
@@ -174,7 +188,7 @@ namespace SharpYaml.Serialization.Descriptors
         {
             // Filter members
             if (member is PropertyDescriptor && ListOfMembersToRemove.Contains(member.OriginalName))
-                //if (member is PropertyDescriptor && (member.DeclaringType.Namespace ?? string.Empty).StartsWith(SystemCollectionsNamespace) && ListOfMembersToRemove.Contains(member.Name))
+            //if (member is PropertyDescriptor && (member.DeclaringType.Namespace ?? string.Empty).StartsWith(SystemCollectionsNamespace) && ListOfMembersToRemove.Contains(member.Name))
             {
                 return false;
             }

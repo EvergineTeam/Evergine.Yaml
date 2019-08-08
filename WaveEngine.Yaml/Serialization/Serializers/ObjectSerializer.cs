@@ -270,6 +270,7 @@ namespace SharpYaml.Serialization.Serializers
                 objectContext.Reader.Skip(currentDepth);
             }
 
+
             return result;
         }
 

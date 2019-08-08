@@ -56,7 +56,7 @@ namespace SharpYaml.Serialization.Descriptors
     /// </summary>
     public class DictionaryDescriptor : ObjectDescriptor
     {
-        private static readonly List<string> ListOfMembersToRemove = new List<string> {"Comparer", "Keys", "Values", "Capacity"};
+        private static readonly List<string> ListOfMembersToRemove = new List<string> { "Comparer", "Keys", "Values", "Capacity" };
 
         private readonly Type keyType;
         private readonly Type valueType;
@@ -72,7 +72,21 @@ namespace SharpYaml.Serialization.Descriptors
         /// <param name="namingConvention">The naming convention.</param>
         /// <exception cref="System.ArgumentException">Expecting a type inheriting from System.Collections.IDictionary;type</exception>
         public DictionaryDescriptor(IAttributeRegistry attributeRegistry, Type type, bool emitDefaultValues, IMemberNamingConvention namingConvention)
-            : base(attributeRegistry, type, emitDefaultValues, namingConvention)
+            : this(attributeRegistry, type, emitDefaultValues, false, namingConvention)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DictionaryDescriptor" /> class.
+        /// </summary>
+        /// <param name="attributeRegistry">The attribute registry.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="emitDefaultValues">if set to <c>true</c> [emit default values].</param>
+        /// <param name="ignoreGetters">If set to <c>true</c> the properties without setter will be ignored</param>
+        /// <param name="namingConvention">The naming convention.</param>
+        /// <exception cref="System.ArgumentException">Expecting a type inheriting from System.Collections.IDictionary;type</exception>
+        public DictionaryDescriptor(IAttributeRegistry attributeRegistry, Type type, bool emitDefaultValues, bool ignoreGetters, IMemberNamingConvention namingConvention)
+            : base(attributeRegistry, type, emitDefaultValues, ignoreGetters, namingConvention)
         {
             if (!IsDictionary(type))
                 throw new ArgumentException("Expecting a type inheriting from System.Collections.IDictionary", "type");
@@ -85,13 +99,13 @@ namespace SharpYaml.Serialization.Descriptors
                 valueType = interfaceType.GetGenericArguments()[1];
                 IsGenericDictionary = true;
                 getEnumeratorGeneric = typeof(DictionaryDescriptor).GetMethod("GetGenericEnumerable").MakeGenericMethod(keyType, valueType);
-                addMethod = interfaceType.GetMethod("Add", new[] {keyType, valueType});
+                addMethod = interfaceType.GetMethod("Add", new[] { keyType, valueType });
             }
             else
             {
                 keyType = typeof(object);
                 valueType = typeof(object);
-                addMethod = type.GetMethod("Add", new[] {keyType, valueType});
+                addMethod = type.GetMethod("Add", new[] { keyType, valueType });
             }
         }
 
@@ -136,7 +150,7 @@ namespace SharpYaml.Serialization.Descriptors
         /// <returns><c>true</c> if [is read only] [the specified this object]; otherwise, <c>false</c>.</returns>
         public bool IsReadOnly(object thisObject)
         {
-            return ((IDictionary) thisObject).IsReadOnly;
+            return ((IDictionary)thisObject).IsReadOnly;
         }
 
         /// <summary>
@@ -152,21 +166,21 @@ namespace SharpYaml.Serialization.Descriptors
                 throw new ArgumentNullException("dictionary");
             if (IsGenericDictionary)
             {
-                foreach (var item in (IEnumerable<KeyValuePair<object, object>>) getEnumeratorGeneric.Invoke(null, new[] {dictionary}))
+                foreach (var item in (IEnumerable<KeyValuePair<object, object>>)getEnumeratorGeneric.Invoke(null, new[] { dictionary }))
                 {
                     yield return item;
                 }
             }
             else
             {
-                var simpleDictionary = (IDictionary) dictionary;
+                var simpleDictionary = (IDictionary)dictionary;
                 foreach (var keyValueObject in simpleDictionary)
                 {
                     if (!(keyValueObject is DictionaryEntry))
                     {
                         throw new NotSupportedException("Key value-pair type [{0}] is not supported for IDictionary. Only DictionaryEntry".DoFormat(keyValueObject));
                     }
-                    var entry = (DictionaryEntry) keyValueObject;
+                    var entry = (DictionaryEntry)keyValueObject;
                     yield return new KeyValuePair<object, object>(entry.Key, entry.Value);
                 }
             }
@@ -195,7 +209,7 @@ namespace SharpYaml.Serialization.Descriptors
                 {
                     throw new InvalidOperationException("No Add() method found on dictionary [{0}]".DoFormat(Type));
                 }
-                addMethod.Invoke(dictionary, new object[] {key, value});
+                addMethod.Invoke(dictionary, new object[] { key, value });
             }
         }
 
@@ -218,7 +232,7 @@ namespace SharpYaml.Serialization.Descriptors
         {
             // Filter members
             if (member is PropertyDescriptor && ListOfMembersToRemove.Contains(member.OriginalName))
-                //if (member is PropertyDescriptor && (member.DeclaringType.Namespace ?? string.Empty).StartsWith(SystemCollectionsNamespace) && ListOfMembersToRemove.Contains(member.Name))
+            //if (member is PropertyDescriptor && (member.DeclaringType.Namespace ?? string.Empty).StartsWith(SystemCollectionsNamespace) && ListOfMembersToRemove.Contains(member.Name))
             {
                 return false;
             }

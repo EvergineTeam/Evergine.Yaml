@@ -218,7 +218,7 @@ namespace SharpYaml.Serialization
                 defaultEmitter.ForceIndentLess = settings.IndentLess;
             }
 
-            var context = new SerializerContext(this, contextSettings) { Emitter = emitter, Writer = CreateEmitter(emitter) };
+            var context = new SerializerContext(this, contextSettings) { Emitter = emitter, Writer = CreateEmitter(emitter), AllowErrors = this.settings.AllowErrors };
 
             // Serialize the document
             context.Writer.StreamStart();
@@ -530,7 +530,7 @@ namespace SharpYaml.Serialization
             object result = null;
             if (!reader.Accept<DocumentEnd>() && !reader.Accept<StreamEnd>())
             {
-                context = new SerializerContext(this, contextSettings) { Reader = reader };
+                context = new SerializerContext(this, contextSettings) { Reader = reader, AllowErrors = this.settings.AllowErrors };
                 result = context.ReadYaml(existingObject, expectedType);
             }
 
@@ -576,7 +576,7 @@ namespace SharpYaml.Serialization
 
         private ITypeDescriptorFactory CreateTypeDescriptorFactory()
         {
-            return new TypeDescriptorFactory(Settings.Attributes, Settings.EmitDefaultValues, Settings.NamingConvention);
+            return new TypeDescriptorFactory(Settings.Attributes, Settings.EmitDefaultValues, Settings.IgnoreGetters, Settings.NamingConvention);
         }
 
         private IEventEmitter CreateEmitter(IEmitter emitter)

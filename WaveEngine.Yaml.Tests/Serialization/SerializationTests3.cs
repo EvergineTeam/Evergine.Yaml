@@ -67,6 +67,16 @@ namespace WaveEngine.Yaml.Tests.Serialization
             public string B;
         }
 
+        public class ClassB
+        {
+            public ClassA PropertyA { get; }
+
+            public ClassB(ClassA a)
+            {
+                this.PropertyA = a;
+            }
+        }
+
         [Test]
         public void NonRecurrentSerializations()
         {
@@ -116,6 +126,29 @@ namespace WaveEngine.Yaml.Tests.Serialization
             var s2 = serializer.Serialize(a);
 
             Assert.AreEqual(s1, s2);
+        }
+
+        [Test]
+        public void IgnoreGetters()
+        {
+            var settings = new SerializerSettings()
+            {
+                EmitAlias = true,
+                ResetAlias = true,
+                ////IgnoreGetters = true,
+            };
+
+            var a = new ClassA()
+            {
+                A = "1",
+                B = "2"
+            };
+
+            var b = new ClassB(a);
+
+            var serializer = new Serializer(settings);
+
+            var s1 = serializer.Serialize(b);
         }
     }
 }

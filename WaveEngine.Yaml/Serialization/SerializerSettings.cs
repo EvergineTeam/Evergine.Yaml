@@ -83,6 +83,7 @@ namespace SharpYaml.Serialization
             IndentLess = false;
             EmitAlias = true;
             EmitTags = true;
+            AllowErrors = false;
             ResetAlias = true;
             SortKeyForMapping = true;
             EmitJsonComptible = false;
@@ -131,10 +132,20 @@ namespace SharpYaml.Serialization
         public bool EmitAlias { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the serializer allows errors.
+        /// </summary>
+        public bool AllowErrors{ get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to emit tags when serializing. Default is true.
         /// </summary>
         /// <value><c>true</c> to emit tags when serializing; otherwise, <c>false</c>.</value>
         public bool EmitTags { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to ignore properties with only getter.
+        /// </summary>
+        public bool IgnoreGetters { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the identation is trying to less
