@@ -68,7 +68,7 @@ namespace WaveEngine.Yaml.Tests.Serialization
         }
 
         [Test]
-        public void RecurrentSerializations()
+        public void NonRecurrentSerializations()
         {
             var settings = new SerializerSettings()
             {
@@ -89,7 +89,33 @@ namespace WaveEngine.Yaml.Tests.Serialization
 
             var s2 = serializer.Serialize(a);
 
-            ////Assert.Equals(s1, s2);
+            Assert.AreNotEqual(s1, s2);
+        }
+
+        [Test]
+        public void RecurrentSerializations()
+        {
+            var settings = new SerializerSettings()
+            {
+                EmitAlias = true,
+                ResetAlias = true,
+            };
+
+            var a = new ClassA()
+            {
+                A = "1",
+                B = "2"
+            };
+
+            var serializer = new Serializer(settings);
+
+            var s1 = serializer.Serialize(a);
+
+            Assert.IsNotEmpty(s1);
+
+            var s2 = serializer.Serialize(a);
+
+            Assert.AreEqual(s1, s2);
         }
     }
 }

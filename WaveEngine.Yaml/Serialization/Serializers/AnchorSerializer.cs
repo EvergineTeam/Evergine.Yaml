@@ -142,5 +142,11 @@ namespace SharpYaml.Serialization.Serializers
 
             base.WriteYaml(ref objectContext);
         }
+
+        internal void Reset()
+        {
+            this.aliasToObject.Clear();
+            this.objectToAlias.Clear();
+        }
     }
 }

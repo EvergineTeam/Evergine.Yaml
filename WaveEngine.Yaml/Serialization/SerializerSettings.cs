@@ -83,6 +83,7 @@ namespace SharpYaml.Serialization
             IndentLess = false;
             EmitAlias = true;
             EmitTags = true;
+            ResetAlias = true;
             SortKeyForMapping = true;
             EmitJsonComptible = false;
             EmitCapacityForList = false;
@@ -117,6 +118,11 @@ namespace SharpYaml.Serialization
                 preferredIndent = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the serializer reses its references, allowing to reuse the same serialize for more than one serialization.
+        /// </summary>
+        public bool ResetAlias { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to emit anchor alias. Default is true.
