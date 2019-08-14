@@ -571,7 +571,7 @@ namespace SharpYaml.Serialization
             }
 
             var typingSerializer = new TagTypeSerializer(routingSerializer);
-            return settings.EmitAlias ? (IYamlSerializable)new AnchorSerializer(typingSerializer) : typingSerializer;
+            return settings.EmitAlias ? (IYamlSerializable)new AnchorSerializer(typingSerializer, settings.AliasGenerator) : typingSerializer;
         }
 
         private ITypeDescriptorFactory CreateTypeDescriptorFactory()

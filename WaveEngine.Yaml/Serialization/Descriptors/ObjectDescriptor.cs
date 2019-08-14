@@ -255,7 +255,7 @@ namespace SharpYaml.Serialization.Descriptors
             // Add all public properties with a readable get method
             var memberList = (from propertyInfo in type.GetProperties(bindingFlags)
                               where
-                                  propertyInfo.CanRead && (propertyInfo.CanWrite || !this.ignoreGetters) && propertyInfo.GetIndexParameters().Length == 0
+                                  propertyInfo.CanRead && propertyInfo.GetIndexParameters().Length == 0
                               select new PropertyDescriptor(propertyInfo, NamingConvention.Comparer)
                 into member
                               where PrepareMember(member)
@@ -296,6 +296,7 @@ namespace SharpYaml.Serialization.Descriptors
             YamlStyleAttribute styleAttribute = null;
             YamlMemberAttribute memberAttribute = null;
             DefaultValueAttribute defaultValueAttribute = null;
+
             foreach (var attribute in attributes)
             {
                 // Member is not displayed if there is a YamlIgnore attribute on it
@@ -344,7 +345,15 @@ namespace SharpYaml.Serialization.Descriptors
             else
             {
                 // Else we cannot only assign its content if it is a class
-                member.SerializeMemberMode = (memberType != typeof(string) && memberType.GetTypeInfo().IsClass) || memberType.GetTypeInfo().IsInterface || type.IsAnonymous() ? SerializeMemberMode.Content : SerializeMemberMode.Never;
+
+                if (this.ignoreGetters)
+                {
+                    member.SerializeMemberMode = (memberAttribute != null) ? SerializeMemberMode.Content : SerializeMemberMode.Never;
+                }
+                else
+                {
+                    member.SerializeMemberMode = (memberType != typeof(string) && memberType.GetTypeInfo().IsClass) || memberType.GetTypeInfo().IsInterface || type.IsAnonymous() || !this.ignoreGetters || (memberAttribute != null) ? SerializeMemberMode.Content : SerializeMemberMode.Never;
+                }
             }
 
             // If it's a private member, check it has a YamlMemberAttribute on it

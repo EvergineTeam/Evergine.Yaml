@@ -55,10 +55,13 @@ namespace SharpYaml.Serialization.Serializers
         private readonly Dictionary<string, object> aliasToObject;
         private readonly Dictionary<object, string> objectToAlias;
 
-        public AnchorSerializer(IYamlSerializable next) : base(next)
+        public SerializerSettings.AliasDelegate TryGenerateAlias;
+
+        public AnchorSerializer(IYamlSerializable next, SerializerSettings.AliasDelegate aliasGenerator) : base(next)
         {
             aliasToObject = new Dictionary<string, object>();
             objectToAlias = new Dictionary<object, string>(new IdentityEqualityComparer<object>());
+            this.TryGenerateAlias = aliasGenerator ?? this.DefaultAliasGenerator;
         }
 
         public bool TryGetAliasValue(string alias, out object value)
@@ -125,14 +128,14 @@ namespace SharpYaml.Serialization.Serializers
             if (isAnchorable)
             {
                 string alias;
+
                 if (objectToAlias.TryGetValue(value, out alias))
                 {
-                    objectContext.Writer.Emit(new AliasEventInfo(value, value.GetType()) {Alias = alias});
+                    objectContext.Writer.Emit(new AliasEventInfo(value, value.GetType()) { Alias = alias });
                     return;
                 }
-                else
+                else if (this.TryGenerateAlias(objectContext.Instance, objectContext.SerializerContext.AnchorCount, out alias))
                 {
-                    alias = string.Format("o{0}", objectContext.SerializerContext.AnchorCount);
                     objectToAlias.Add(value, alias);
 
                     objectContext.Anchor = alias;
@@ -147,6 +150,13 @@ namespace SharpYaml.Serialization.Serializers
         {
             this.aliasToObject.Clear();
             this.objectToAlias.Clear();
+        }
+
+        private bool DefaultAliasGenerator(object instance, int anchorCount, out string alias)
+        {
+            alias = string.Format("o{0}", anchorCount);
+
+            return true;
         }
     }
 }

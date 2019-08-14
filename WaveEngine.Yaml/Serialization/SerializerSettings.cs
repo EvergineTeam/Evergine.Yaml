@@ -67,6 +67,8 @@ namespace SharpYaml.Serialization
         private IObjectSerializerBackend objectSerializerBackend;
         private IMemberNamingConvention _namingConvention;
 
+        public delegate bool AliasDelegate(object instance, int anchorCount, out string alias);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializerSettings"/> class.
         /// </summary>
@@ -321,6 +323,11 @@ namespace SharpYaml.Serialization
         /// <value>The schema.</value>
         /// <exception cref="System.ArgumentNullException">value</exception>
         public IYamlSchema Schema { get { return schema; } }
+
+        /// <summary>
+        /// Gets or sets he alias generator delegate.
+        /// </summary>
+        public AliasDelegate AliasGenerator { get; set; }
 
         /// <summary>
         /// Register a mapping between a tag and a type.

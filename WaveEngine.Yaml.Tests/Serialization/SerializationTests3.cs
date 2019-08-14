@@ -69,6 +69,7 @@ namespace WaveEngine.Yaml.Tests.Serialization
 
         public class ClassB
         {
+            [YamlMember]
             public ClassA PropertyA { get; }
 
             public ClassB(ClassA a)
@@ -135,7 +136,7 @@ namespace WaveEngine.Yaml.Tests.Serialization
             {
                 EmitAlias = true,
                 ResetAlias = true,
-                ////IgnoreGetters = true,
+                IgnoreGetters = true,
             };
 
             var a = new ClassA()
