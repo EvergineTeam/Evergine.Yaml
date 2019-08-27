@@ -352,7 +352,7 @@ namespace SharpYaml.Serialization.Descriptors
                 }
                 else
                 {
-                    member.SerializeMemberMode = (memberType != typeof(string) && memberType.GetTypeInfo().IsClass) || memberType.GetTypeInfo().IsInterface || type.IsAnonymous() || !this.ignoreGetters || (memberAttribute != null) ? SerializeMemberMode.Content : SerializeMemberMode.Never;
+                    member.SerializeMemberMode = (memberType != typeof(string) && memberType.GetTypeInfo().IsClass) || memberType.GetTypeInfo().IsInterface || type.IsAnonymous() || (memberAttribute != null) ? SerializeMemberMode.Content : SerializeMemberMode.Never;
                 }
             }
 
