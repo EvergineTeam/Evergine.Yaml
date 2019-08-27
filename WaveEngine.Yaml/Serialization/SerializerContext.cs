@@ -119,6 +119,11 @@ namespace SharpYaml.Serialization
         public EventReader Reader { get; set; }
 
         /// <summary>
+        /// Gets or sets the existing object created at the beginning.
+        /// </summary>
+        public object InitialInstance { get; set; }
+
+        /// <summary>
         /// Gets the object serializer backend.
         /// </summary>
         /// <value>The object serializer backend.</value>
