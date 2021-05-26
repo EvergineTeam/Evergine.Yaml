@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <PackageId>WaveEngine.Yaml</PackageId>
-    <VersionPrefix>1.6.5</VersionPrefix>
-    <AssemblyName>WaveEngine.Yaml</AssemblyName>
-    <AssemblyTitle>WaveEngine.Yaml</AssemblyTitle>
+    <PackageId>SharpYaml</PackageId>
+    <VersionPrefix>1.6.7</VersionPrefix>
+    <AssemblyName>SharpYaml</AssemblyName>
+    <AssemblyTitle>SharpYaml</AssemblyTitle>
     <RootNamespace>SharpYaml</RootNamespace>
     <Description>A YAML portable .NET library. providing parsing and serialization of object graphs, compatible with CoreCLR. This package is also used by WaveEngine to provide its custom YAML serialization.</Description>
     <!--<TargetFrameworks>net35;net45;netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>-->
@@ -13,34 +12,22 @@
     <Copyright>Alexandre Mutel; Wave Engine Team</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageTags>yaml;parser;yml</PackageTags>
-    <PackageReleaseNotes>https://github.com/WaveEngine/WaveEngine.Yaml/blob/master/changelog.md</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/WaveEngine/WaveEngine.Yaml</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/WaveEngine/WaveEngine.Yaml/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageReleaseNotes>https://github.com/xoofx/SharpYaml/blob/master/changelog.md</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/xoofx/SharpYaml</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/xoofx/SharpYaml/blob/master/LICENSE.txt</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>git://github.com/WaveEngine/WaveEngine.Yaml</RepositoryUrl>
-    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
+    <RepositoryUrl>git://github.com/xoofx/SharpYaml</RepositoryUrl>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <PackageIconUrl>http://wave.blob.core.windows.net/$root/NugetWave.png</PackageIconUrl>
+    <!--Add support for sourcelink-->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'portable40-net40+sl5+win8+wp8+wpa81' ">
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
@@ -50,32 +37,13 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <NoWarn>CS1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <!--<AssemblyOriginatorKeyFile>..\WaveEngine.Yaml.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>WaveEngine.Yaml.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>-->
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD1_3;NETPOST45</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD1_6;NETPOST45</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <DefineConstants>$(DefineConstants);NETSTANDARD1_6;NETPOST45</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
-    <DefineConstants>$(DefineConstants);NET35</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'portable40-net40+sl5+win8+wp8+wpa81'">
-    <DefineConstants>$(DefineConstants);PROFILE328</DefineConstants>
-    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile328</TargetFrameworkProfile>
-  </PropertyGroup>
-
+  <ItemGroup>
+    <!--Add support for sourcelink-->
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.*" PrivateAssets="All" />
+  </ItemGroup>
 </Project>
