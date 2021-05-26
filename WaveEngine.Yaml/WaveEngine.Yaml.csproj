@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <PackageId>SharpYaml</PackageId>
+    <PackageId>WaveEngine.Yaml</PackageId>
     <VersionPrefix>1.6.7</VersionPrefix>
-    <AssemblyName>SharpYaml</AssemblyName>
-    <AssemblyTitle>SharpYaml</AssemblyTitle>
+    <AssemblyName>WaveEngine.Yaml</AssemblyName>
+    <AssemblyTitle>WaveEngine.Yaml</AssemblyTitle>
     <RootNamespace>SharpYaml</RootNamespace>
     <Description>A YAML portable .NET library. providing parsing and serialization of object graphs, compatible with CoreCLR. This package is also used by WaveEngine to provide its custom YAML serialization.</Description>
     <!--<TargetFrameworks>net35;net45;netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>-->
