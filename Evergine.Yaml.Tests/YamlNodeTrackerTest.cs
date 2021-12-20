@@ -4,18 +4,22 @@ using NUnit.Framework;
 using SharpYaml.Model;
 using YamlStream = SharpYaml.Model.YamlStream;
 
-namespace WaveEngine.Yaml.Tests {
-    public class YamlNodeTrackerTest {
+namespace Evergine.Yaml.Tests
+{
+    public class YamlNodeTrackerTest
+    {
         [Test]
-        public void DeserializeTest() {
+        public void DeserializeTest()
+        {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test11.yaml");
+                .GetManifestResourceStream("Evergine.Yaml.Tests.files.test11.yaml");
 
             var childrenAdded = 0;
 
             var tracker = new YamlNodeTracker();
 
-            tracker.TrackerEvent += (sender, args) => {
+            tracker.TrackerEvent += (sender, args) =>
+            {
                 if (args.EventType == TrackerEventType.MappingPairAdded ||
                     args.EventType == TrackerEventType.SequenceElementAdded ||
                     args.EventType == TrackerEventType.StreamDocumentAdded)
@@ -29,15 +33,17 @@ namespace WaveEngine.Yaml.Tests {
         }
 
         [Test]
-        public void ValueSetTest() {
+        public void ValueSetTest()
+        {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test4.yaml");
+                .GetManifestResourceStream("Evergine.Yaml.Tests.files.test4.yaml");
 
             var childrenAdded = 0;
 
             var tracker = new YamlNodeTracker();
 
-            tracker.TrackerEvent += (sender, args) => {
+            tracker.TrackerEvent += (sender, args) =>
+            {
                 if (args.EventType == TrackerEventType.MappingPairAdded ||
                     args.EventType == TrackerEventType.SequenceElementAdded ||
                     args.EventType == TrackerEventType.StreamDocumentAdded)
@@ -50,50 +56,57 @@ namespace WaveEngine.Yaml.Tests {
             Assert.AreEqual(3, childrenAdded);
 
             ScalarValueChanged valueChanged = null;
-            tracker.TrackerEvent += (sender, args) => {
+            tracker.TrackerEvent += (sender, args) =>
+            {
                 if (args is ScalarValueChanged)
-                    valueChanged = (ScalarValueChanged) args;
+                    valueChanged = (ScalarValueChanged)args;
             };
-            ((YamlValue) stream[0].Contents).Value = "a silly scalar";
+            ((YamlValue)stream[0].Contents).Value = "a silly scalar";
 
             Assert.AreEqual("a scalar", valueChanged.OldValue);
             Assert.AreEqual("a silly scalar", valueChanged.NewValue);
             Assert.AreEqual(stream[0].Contents, valueChanged.Node);
             Assert.AreEqual(1, valueChanged.ParentPaths.Count);
-            Assert.AreEqual(new SharpYaml.Model.Path(stream, new []{ new ChildIndex(0, false), new ChildIndex(-1, false) }),  valueChanged.ParentPaths[0]);
+            Assert.AreEqual(new SharpYaml.Model.Path(stream, new[] { new ChildIndex(0, false), new ChildIndex(-1, false) }), valueChanged.ParentPaths[0]);
         }
 
 
-        class SubscriberHandler {
+        class SubscriberHandler
+        {
             public int ACalls;
             public int BCalls;
             public int CCalls;
 
-            public void A(TrackerEventArgs args) {
+            public void A(TrackerEventArgs args)
+            {
                 ACalls++;
             }
 
-            public void B(TrackerEventArgs args) {
+            public void B(TrackerEventArgs args)
+            {
                 BCalls++;
             }
 
-            public void C(TrackerEventArgs args) {
+            public void C(TrackerEventArgs args)
+            {
                 CCalls++;
             }
         }
 
         [Test]
-        public void DisposeTest() {
+        public void DisposeTest()
+        {
             // In .NET versions higher than 3.5, the parents dictionary is replaced with
             // ConditionalWeakTable, allowing tracked YAML nodes to be freed properly.
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test4.yaml");
+                .GetManifestResourceStream("Evergine.Yaml.Tests.files.test4.yaml");
 
             var childrenAdded = 0;
 
             var tracker = new YamlNodeTracker();
 
-            tracker.TrackerEvent += (sender, args) => {
+            tracker.TrackerEvent += (sender, args) =>
+            {
                 if (args.EventType == TrackerEventType.MappingPairAdded ||
                     args.EventType == TrackerEventType.SequenceElementAdded ||
                     args.EventType == TrackerEventType.StreamDocumentAdded)
@@ -116,9 +129,10 @@ namespace WaveEngine.Yaml.Tests {
         }
 
         [Test]
-        public void SubscriberTest() {
+        public void SubscriberTest()
+        {
             var file = System.Reflection.Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("WaveEngine.Yaml.Tests.files.test12.yaml");
+                .GetManifestResourceStream("Evergine.Yaml.Tests.files.test12.yaml");
 
             var childrenAdded = 0;
 
@@ -127,15 +141,15 @@ namespace WaveEngine.Yaml.Tests {
             var fileStream = new StreamReader(file);
             var yaml = YamlStream.Load(fileStream, tracker);
 
-            var mapping1 = (YamlMapping) ((YamlSequence) yaml[0].Contents)[1];
-            var mapping2 = (YamlMapping) ((YamlSequence)yaml[0].Contents)[2];
+            var mapping1 = (YamlMapping)((YamlSequence)yaml[0].Contents)[1];
+            var mapping2 = (YamlMapping)((YamlSequence)yaml[0].Contents)[2];
 
             var handler = new SubscriberHandler();
 
             tracker.Subscribe(handler, null, "A");
             tracker.Subscribe(handler, tracker.GetPaths(yaml[0].Contents)[0], "B");
             tracker.Subscribe(handler, tracker.GetPaths(mapping1)[0], "C");
-            
+
             mapping1["key 1"] = new YamlValue("Bla");
 
             Assert.AreEqual(1, handler.ACalls);
@@ -156,30 +170,33 @@ namespace WaveEngine.Yaml.Tests {
         }
 
         [Test]
-        public void AddPairTest() {
+        public void AddPairTest()
+        {
             var tracker = new YamlNodeTracker();
             var stream = new YamlStream(tracker);
             stream.Add(new YamlDocument());
             stream[0].Contents = new YamlMapping();
 
             TrackerEventArgs receivedArgs = null;
-            tracker.TrackerEvent += (sender, args) => {
+            tracker.TrackerEvent += (sender, args) =>
+            {
                 receivedArgs = args;
             };
 
-            ((YamlMapping) stream[0].Contents)["A"] = new YamlValue(5);
+            ((YamlMapping)stream[0].Contents)["A"] = new YamlValue(5);
 
             Assert.IsTrue(receivedArgs is MappingPairAdded);
-            Assert.AreEqual(TrackerEventType.MappingPairAdded, ((MappingPairAdded) receivedArgs).EventType);
+            Assert.AreEqual(TrackerEventType.MappingPairAdded, ((MappingPairAdded)receivedArgs).EventType);
             Assert.AreEqual(0, ((MappingPairAdded)receivedArgs).Index);
-            Assert.AreEqual(new SharpYaml.Model.Path(stream, new [] { new ChildIndex(0, false), new ChildIndex(-1, false) }), ((MappingPairAdded)receivedArgs).ParentPaths[0]);
+            Assert.AreEqual(new SharpYaml.Model.Path(stream, new[] { new ChildIndex(0, false), new ChildIndex(-1, false) }), ((MappingPairAdded)receivedArgs).ParentPaths[0]);
             Assert.AreEqual("A", ((MappingPairAdded)receivedArgs).Child.Key.ToString());
-            Assert.AreEqual("5", ((MappingPairAdded) receivedArgs).Child.Value.ToString());
+            Assert.AreEqual("5", ((MappingPairAdded)receivedArgs).Child.Value.ToString());
         }
 
 
         [Test]
-        public void TrackerAssignmentTest() {
+        public void TrackerAssignmentTest()
+        {
             var tracker = new YamlNodeTracker();
             var stream = new YamlStream(tracker);
 

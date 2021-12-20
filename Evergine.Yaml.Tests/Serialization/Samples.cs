@@ -1,15 +1,15 @@
-﻿// Copyright (c) 2015 SharpYaml - Alexandre Mutel
-// 
+// Copyright (c) 2015 SharpYaml - Alexandre Mutel
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -17,24 +17,24 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// 
+//
 // -------------------------------------------------------------------------------
 // SharpYaml is a fork of YamlDotNet https://github.com/aaubry/YamlDotNet
 // published with the following license:
 // -------------------------------------------------------------------------------
-// 
+//
 // Copyright (c) 2008, 2009, 2010, 2011, 2012 Antoine Aubry
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
 // the Software without restriction, including without limitation the rights to
 // use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 // of the Software, and to permit persons to whom the Software is furnished to do
 // so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -44,112 +44,65 @@
 // SOFTWARE.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Policy;
 using NUnit.Framework;
 using SharpYaml.Serialization;
-using SharpYaml.Serialization.Serializers;
 
-namespace WaveEngine.Yaml.Tests.Serialization
+namespace Evergine.Yaml.Tests.Serialization
 {
-    [TestFixture]
-    public class SerializationTests3
+    public class Program
     {
-        public class ClassA
+        [Test]
+        public void LoadYamlStream()
         {
-            public string A;
-            public string B;
-        }
+            // Setup the input
+            var input = new StringReader(Document);
 
-        public class ClassB
-        {
-            [YamlMember]
-            public ClassA PropertyA { get; }
+            // Load the stream
+            var yaml = new YamlStream();
+            yaml.Load(input);
 
-            public ClassB(ClassA a)
+            // Examine the stream
+            var mapping = (YamlMappingNode) yaml.Documents[0].RootNode;
+
+            foreach (var entry in mapping.Children)
             {
-                this.PropertyA = a;
+                Console.WriteLine(((YamlScalarNode) entry.Key).Value);
             }
         }
 
-        [Test]
-        public void NonRecurrentSerializations()
-        {
-            var settings = new SerializerSettings()
-            {
-                EmitAlias = true,
-            };
+        private const string Document = @"---
+            receipt:    Oz-Ware Purchase Invoice
+            date:        2007-08-06
+            customer:
+                given:   Dorothy
+                family:  Gale
 
-            var a = new ClassA()
-            {
-                A = "1",
-                B = "2"
-            };
+            items:
+                - part_no:   A4786
+                  descrip:   Water Bucket (Filled)
+                  price:     1.47
+                  quantity:  4
 
-            var serializer = new Serializer(settings);
+                - part_no:   E1628
+                  descrip:   High Heeled ""Ruby"" Slippers
+                  price:     100.27
+                  quantity:  1
 
-            var s1 = serializer.Serialize(a);
+            bill-to:  &id001
+                street: |
+                        123 Tornado Alley
+                        Suite 16
+                city:   East Westville
+                state:  KS
 
-            Assert.IsNotEmpty(s1);
+            ship-to:  *id001
 
-            var s2 = serializer.Serialize(a);
-
-            Assert.AreNotEqual(s1, s2);
-        }
-
-        [Test]
-        public void RecurrentSerializations()
-        {
-            var settings = new SerializerSettings()
-            {
-                EmitAlias = true,
-                ResetAlias = true,
-            };
-
-            var a = new ClassA()
-            {
-                A = "1",
-                B = "2"
-            };
-
-            var serializer = new Serializer(settings);
-
-            var s1 = serializer.Serialize(a);
-
-            Assert.IsNotEmpty(s1);
-
-            var s2 = serializer.Serialize(a);
-
-            Assert.AreEqual(s1, s2);
-        }
-
-        [Test]
-        public void IgnoreGetters()
-        {
-            var settings = new SerializerSettings()
-            {
-                EmitAlias = true,
-                ResetAlias = true,
-                IgnoreGetters = true,
-            };
-
-            var a = new ClassA()
-            {
-                A = "1",
-                B = "2"
-            };
-
-            var b = new ClassB(a);
-
-            var serializer = new Serializer(settings);
-
-            var s1 = serializer.Serialize(b);
-        }
+            specialDelivery:  >
+                Follow the Yellow Brick
+                Road to the Emerald City.
+                Pay no attention to the
+                man behind the curtain.
+...";
     }
 }

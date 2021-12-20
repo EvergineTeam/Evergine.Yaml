@@ -10,12 +10,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		changelog.md = changelog.md
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
-		WaveEngine.Yaml.snk = WaveEngine.Yaml.snk
+		Evergine.Yaml.snk = Evergine.Yaml.snk
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WaveEngine.Yaml", "WaveEngine.Yaml\WaveEngine.Yaml.csproj", "{BF32DE1B-6276-4341-B212-F8862ADBBA7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evergine.Yaml", "Evergine.Yaml\Evergine.Yaml.csproj", "{BF32DE1B-6276-4341-B212-F8862ADBBA7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaveEngine.Yaml.Tests", "WaveEngine.Yaml.Tests\WaveEngine.Yaml.Tests.csproj", "{16D8043D-C3DB-4868-BFF3-B2EBDF537AAA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evergine.Yaml.Tests", "Evergine.Yaml.Tests\Evergine.Yaml.Tests.csproj", "{16D8043D-C3DB-4868-BFF3-B2EBDF537AAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

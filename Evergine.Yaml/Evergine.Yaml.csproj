@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <PackageId>WaveEngine.Yaml</PackageId>
+    <PackageId>Evergine.Yaml</PackageId>
     <VersionPrefix>1.6.7</VersionPrefix>
-    <AssemblyName>WaveEngine.Yaml</AssemblyName>
-    <AssemblyTitle>WaveEngine.Yaml</AssemblyTitle>
+    <AssemblyName>Evergine.Yaml</AssemblyName>
+    <AssemblyTitle>Evergine.Yaml</AssemblyTitle>
     <RootNamespace>SharpYaml</RootNamespace>
-    <Description>A YAML portable .NET library. providing parsing and serialization of object graphs, compatible with CoreCLR. This package is also used by WaveEngine to provide its custom YAML serialization.</Description>
+    <Description>A YAML portable .NET library. providing parsing and serialization of object graphs, compatible with CoreCLR. This package is also used by Evergine to provide its custom YAML serialization.</Description>
     <!--<TargetFrameworks>net35;net45;netstandard1.3;netstandard1.6;netstandard2.0</TargetFrameworks>-->
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <Authors>Alexandre Mutel; Wave Engine Team</Authors>
-    <Copyright>Alexandre Mutel; Wave Engine Team</Copyright>
+    <Authors>Alexandre Mutel; Evergine Team</Authors>
+    <Copyright>Alexandre Mutel; Evergine Team</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageTags>yaml;parser;yml</PackageTags>
     <PackageReleaseNotes>https://github.com/xoofx/SharpYaml/blob/master/changelog.md</PackageReleaseNotes>
@@ -37,7 +37,7 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <NoWarn>CS1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyOriginatorKeyFile>..\WaveEngine.Yaml.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Evergine.Yaml.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
   </PropertyGroup>

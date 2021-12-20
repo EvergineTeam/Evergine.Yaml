@@ -85,7 +85,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WaveEngine.Yaml\WaveEngine.Yaml.csproj" />
+    <ProjectReference Include="..\Evergine.Yaml\Evergine.Yaml.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,15 +1,15 @@
-﻿// Copyright (c) 2015 SharpYaml - Alexandre Mutel
-// 
+// Copyright (c) 2015 SharpYaml - Alexandre Mutel
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -17,24 +17,24 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// 
+//
 // -------------------------------------------------------------------------------
 // SharpYaml is a fork of YamlDotNet https://github.com/aaubry/YamlDotNet
 // published with the following license:
 // -------------------------------------------------------------------------------
-// 
+//
 // Copyright (c) 2008, 2009, 2010, 2011, 2012 Antoine Aubry
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
 // the Software without restriction, including without limitation the rights to
 // use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 // of the Software, and to permit persons to whom the Software is furnished to do
 // so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -43,68 +43,52 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.IO;
-using NUnit.Framework;
-using SharpYaml.Serialization;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
-namespace WaveEngine.Yaml.Tests.Serialization
+namespace Evergine.Yaml.Tests
 {
-    public class ExceptionWithNestedSerialization
+    public class YamlTest
     {
-        [Test]
-        public void NestedDocumentShouldDeserializeProperly()
+        protected static TextReader YamlFile(string name)
         {
-            var serializer = new Serializer(new SerializerSettings() {EmitDefaultValues = true});
-
-            // serialize AMessage
-            var tw = new StringWriter();
-            serializer.Serialize(tw, new AMessage {Payload = new PayloadA {X = 5, Y = 6}});
-            Dump.WriteLine(tw);
-
-            // stick serialized AMessage in envelope and serialize it
-            var e = new Env {Type = "some-type", Payload = tw.ToString()};
-
-            tw = new StringWriter();
-            serializer.Serialize(tw, e);
-            Dump.WriteLine(tw);
-
-            Dump.WriteLine("${0}$", e.Payload);
-
-            var settings = new SerializerSettings();
-            settings.RegisterAssembly(typeof(Env).Assembly);
-            var deserializer = new Serializer(settings);
-            // deserialize envelope
-            var e2 = deserializer.Deserialize<Env>(new StringReader(tw.ToString()));
-
-            Dump.WriteLine("${0}$", e2.Payload);
-
-            // deserialize payload - fails if EmitDefaults is set
-            var message = deserializer.Deserialize<AMessage>(e2.Payload);
-            Assert.NotNull(message.Payload);
-            Assert.AreEqual(message.Payload.X, 5);
-            Assert.AreEqual(message.Payload.Y, 6);
+            var fromType = typeof(YamlTest);
+            var assembly = Assembly.GetAssembly(fromType);
+            var stream = assembly.GetManifestResourceStream(name) ??
+                         assembly.GetManifestResourceStream(fromType.Namespace + ".files." + name);
+            return new StreamReader(stream);
         }
 
-        public class Env
+        protected static TextReader YamlText(string yaml)
         {
-            public string Type { get; set; }
-            public string Payload { get; set; }
-        }
+            var lines = yaml
+                .Split('\n')
+                .Select(l => l.TrimEnd('\r', '\n'))
+                .SkipWhile(l => l.Trim(' ', '\t').Length == 0)
+                .ToList();
 
-        public class Message<TPayload>
-        {
-            public int id { get; set; }
-            public TPayload Payload { get; set; }
-        }
+            while (lines.Count > 0 && lines[lines.Count - 1].Trim(' ', '\t').Length == 0)
+            {
+                lines.RemoveAt(lines.Count - 1);
+            }
 
-        public class PayloadA
-        {
-            public int X { get; set; }
-            public int Y { get; set; }
-        }
+            if (lines.Count > 0)
+            {
+                var indent = Regex.Match(lines[0], @"^(\t+)");
+                if (!indent.Success)
+                {
+                    throw new ArgumentException("Invalid indentation");
+                }
 
-        public class AMessage : Message<PayloadA>
-        {
+                lines = lines
+                    .Select(l => l.Substring(indent.Groups[1].Length))
+                    .ToList();
+            }
+
+            return new StringReader(string.Join("\n", lines.ToArray()));
         }
     }
 }

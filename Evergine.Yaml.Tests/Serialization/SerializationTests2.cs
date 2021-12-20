@@ -1,15 +1,15 @@
 ﻿// Copyright (c) 2015 SharpYaml - Alexandre Mutel
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -17,24 +17,24 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// 
+//
 // -------------------------------------------------------------------------------
 // SharpYaml is a fork of YamlDotNet https://github.com/aaubry/YamlDotNet
 // published with the following license:
 // -------------------------------------------------------------------------------
-// 
+//
 // Copyright (c) 2008, 2009, 2010, 2011, 2012 Antoine Aubry
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
 // the Software without restriction, including without limitation the rights to
 // use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 // of the Software, and to permit persons to whom the Software is furnished to do
 // so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -57,7 +57,7 @@ using SharpYaml;
 using SharpYaml.Serialization;
 using SharpYaml.Serialization.Serializers;
 
-namespace WaveEngine.Yaml.Tests.Serialization
+namespace Evergine.Yaml.Tests.Serialization
 {
     [TestFixture]
     public class SerializationTests2
@@ -414,7 +414,7 @@ Values: [a, b, c]
         /// Tests the serialization of a custom collection with some custom properties.
         /// In this specific case, the collection cannot be serialized as a simple list
         /// so the serializer is serializing the list as a YAML mapping, using the mapping
-        /// to store the usual propertis and using the special member '~Items' to serialzie 
+        /// to store the usual propertis and using the special member '~Items' to serialzie
         /// the real content of the list
         /// </summary>
         [Test]
@@ -447,7 +447,7 @@ Value: 1
         /// Tests the serialization of a custom dictionary with some custom properties.
         /// In this specific case, the dictionary cannot be serialized as a simple mapping
         /// so the serializer is serializing the dictionary as a YAML !!map, using the mapping
-        /// to store the usual propertis and using the special member '~Items' to serialize 
+        /// to store the usual propertis and using the special member '~Items' to serialize
         /// the real content of the dictionary as a sub YAML !!map
         /// </summary>
         [Test]
@@ -516,7 +516,7 @@ c: true
 
             /// <summary>
             /// For this property, the deserializer is using the actual
-            /// value of the list stored in this instance instead of 
+            /// value of the list stored in this instance instead of
             /// creating a new List&lt;T&gtl instance.
             /// </summary>
             public List<string> StringListByContent { get; private set; }
@@ -542,7 +542,7 @@ c: true
 
             /// <summary>
             /// For this property, the deserializer is using the actual
-            /// value of the list stored in this instance instead of 
+            /// value of the list stored in this instance instead of
             /// creating a new List&lt;T&gtl instance.
             /// </summary>
             /// <value>The content of the list by.</value>
@@ -553,7 +553,7 @@ c: true
         /// Tests the serialization of a custom dictionary with some custom properties.
         /// In this specific case, the dictionary cannot be serialized as a simple mapping
         /// so the serializer is serializing the dictionary as a YAML !!map, using the mapping
-        /// to store the usual propertis and using the special member '~Items' to serialize 
+        /// to store the usual propertis and using the special member '~Items' to serialize
         /// the real content of the dictionary as a sub YAML !!map
         /// </summary>
         [Test]
@@ -618,14 +618,14 @@ Value: 0
             public int First { get; set; }
 
             /// <summary>
-            /// This property will be sorted after 
+            /// This property will be sorted after
             /// the explicit order by alphabetical order
             /// </summary>
             /// <value>The name after.</value>
             public int NameAfter { get; set; }
 
             /// <summary>
-            /// This property will be sorted after 
+            /// This property will be sorted after
             /// the explicit order by alphabetical order
             /// </summary>
             public int Name { get; set; }

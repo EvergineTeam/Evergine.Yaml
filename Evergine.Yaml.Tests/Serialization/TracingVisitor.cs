@@ -1,15 +1,15 @@
 // Copyright (c) 2015 SharpYaml - Alexandre Mutel
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -17,24 +17,24 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// 
+//
 // -------------------------------------------------------------------------------
 // SharpYaml is a fork of YamlDotNet https://github.com/aaubry/YamlDotNet
 // published with the following license:
 // -------------------------------------------------------------------------------
-// 
+//
 // Copyright (c) 2008, 2009, 2010, 2011, 2012 Antoine Aubry
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
 // the Software without restriction, including without limitation the rights to
 // use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 // of the Software, and to permit persons to whom the Software is furnished to do
 // so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -43,91 +43,91 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using SharpYaml;
-using SharpYaml.Tokens;
+using System;
+using SharpYaml.Serialization;
 
-namespace WaveEngine.Yaml.Tests
+namespace Evergine.Yaml.Tests.Serialization
 {
-    public class ScannerTestHelper : YamlTest
+    public class TracingVisitor : YamlVisitor
     {
-        protected static StreamStart StreamStart { get { return new StreamStart(); } }
+        private int indent = 0;
 
-        protected static StreamEnd StreamEnd { get { return new StreamEnd(); } }
-
-        protected static DocumentStart DocumentStart { get { return new DocumentStart(); } }
-
-        protected static DocumentEnd DocumentEnd { get { return new DocumentEnd(); } }
-
-        protected static VersionDirective VersionDirective(int major, int minor)
+        private void WriteIndent()
         {
-            return new VersionDirective(new Version(major, minor));
+            for (int i = 0; i < indent; ++i)
+            {
+                Console.Write("  ");
+            }
         }
 
-        protected static TagDirective TagDirective(string handle, string prefix)
+        protected override void Visit(YamlDocument document)
         {
-            return new TagDirective(handle, prefix);
+            WriteIndent();
+            Console.WriteLine("Visit(YamlDocument)");
+            ++indent;
         }
 
-        protected static Tag Tag(string handle, string suffix)
+        protected override void Visit(YamlMappingNode mapping)
         {
-            return new Tag(handle, suffix);
+            WriteIndent();
+            Console.WriteLine("Visit(YamlMapping, {0}, {1})", mapping.Anchor, mapping.Tag);
+            ++indent;
         }
 
-        protected static Scalar PlainScalar(string text)
+        protected override void Visit(YamlScalarNode scalar)
         {
-            return new Scalar(text, ScalarStyle.Plain);
+            WriteIndent();
+            Console.WriteLine("Visit(YamlScalarNode, {0}, {1}) - {2}", scalar.Anchor, scalar.Tag, scalar.Value);
+            ++indent;
         }
 
-        protected static Scalar SingleQuotedScalar(string text)
+        protected override void Visit(YamlSequenceNode sequence)
         {
-            return new Scalar(text, ScalarStyle.SingleQuoted);
+            WriteIndent();
+            Console.WriteLine("Visit(YamlSequenceNode, {0}, {1})", sequence.Anchor, sequence.Tag);
+            ++indent;
         }
 
-        protected static Scalar DoubleQuotedScalar(string text)
+        protected override void Visit(YamlStream stream)
         {
-            return new Scalar(text, ScalarStyle.DoubleQuoted);
+            WriteIndent();
+            Console.WriteLine("Visit(YamlStream)");
+            ++indent;
         }
 
-        protected static Scalar LiteralScalar(string text)
+        protected override void Visited(YamlDocument document)
         {
-            return new Scalar(text, ScalarStyle.Literal);
+            --indent;
+            WriteIndent();
+            Console.WriteLine("Visited(YamlDocument)");
         }
 
-        protected static Scalar FoldedScalar(string text)
+        protected override void Visited(YamlMappingNode mapping)
         {
-            return new Scalar(text, ScalarStyle.Folded);
+            --indent;
+            WriteIndent();
+            Console.WriteLine("Visited(YamlMappingNode)");
         }
 
-        protected static FlowSequenceStart FlowSequenceStart { get { return new FlowSequenceStart(); } }
-
-        protected static FlowSequenceEnd FlowSequenceEnd { get { return new FlowSequenceEnd(); } }
-
-        protected static BlockSequenceStart BlockSequenceStart { get { return new BlockSequenceStart(); } }
-
-        protected static FlowMappingStart FlowMappingStart { get { return new FlowMappingStart(); } }
-
-        protected static FlowMappingEnd FlowMappingEnd { get { return new FlowMappingEnd(); } }
-
-        protected static BlockMappingStart BlockMappingStart { get { return new BlockMappingStart(); } }
-
-        protected static Key Key { get { return new Key(); } }
-
-        protected static Value Value { get { return new Value(); } }
-
-        protected static FlowEntry FlowEntry { get { return new FlowEntry(); } }
-
-        protected static BlockEntry BlockEntry { get { return new BlockEntry(); } }
-
-        protected static BlockEnd BlockEnd { get { return new BlockEnd(); } }
-
-        protected static Anchor Anchor(string anchor)
+        protected override void Visited(YamlScalarNode scalar)
         {
-            return new Anchor(anchor);
+            --indent;
+            WriteIndent();
+            Console.WriteLine("Visited(YamlScalarNode)");
         }
 
-        protected static AnchorAlias AnchorAlias(string alias)
+        protected override void Visited(YamlSequenceNode sequence)
         {
-            return new AnchorAlias(alias);
+            --indent;
+            WriteIndent();
+            Console.WriteLine("Visited(YamlSequenceNode)");
+        }
+
+        protected override void Visited(YamlStream stream)
+        {
+            --indent;
+            WriteIndent();
+            Console.WriteLine("Visited(YamlStream)");
         }
     }
 }

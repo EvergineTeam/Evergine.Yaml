@@ -1,15 +1,15 @@
 // Copyright (c) 2015 SharpYaml - Alexandre Mutel
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -17,24 +17,24 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// 
+//
 // -------------------------------------------------------------------------------
 // SharpYaml is a fork of YamlDotNet https://github.com/aaubry/YamlDotNet
 // published with the following license:
 // -------------------------------------------------------------------------------
-// 
+//
 // Copyright (c) 2008, 2009, 2010, 2011, 2012 Antoine Aubry
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy of
 // this software and associated documentation files (the "Software"), to deal in
 // the Software without restriction, including without limitation the rights to
 // use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 // of the Software, and to permit persons to whom the Software is furnished to do
 // so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -43,353 +43,323 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections;
 using NUnit.Framework;
 using SharpYaml;
-using SharpYaml.Events;
+using SharpYaml.Tokens;
 
-namespace WaveEngine.Yaml.Tests
+namespace Evergine.Yaml.Tests
 {
-    public class ParserTests : ParserTestHelper
+    public class ScannerTests : ScannerTestHelper
     {
         [Test]
-        public void EmptyDocument()
+        public void VerifyTokensOnExample1()
         {
-            AssertSequenceOfEventsFrom(ParserFor("empty.yaml"),
+            AssertSequenceOfTokensFrom(ScannerFor("test1.yaml"),
                 StreamStart,
-                StreamEnd);
-        }
-
-        [Test]
-        public void VerifyEventsOnExample1()
-        {
-            AssertSequenceOfEventsFrom(ParserFor("test1.yaml"),
-                StreamStart,
-                DocumentStart(Explicit, Version(1, 1),
-                    TagDirective("!", "!foo"),
-                    TagDirective("!yaml!", TagYaml),
-                    TagDirective("!!", TagYaml)),
-                PlainScalar(string.Empty),
-                DocumentEnd(Implicit),
+                VersionDirective(1, 1),
+                TagDirective("!", "!foo"),
+                TagDirective("!yaml!", "tag:yaml.org,2002:"),
+                DocumentStart,
                 StreamEnd);
         }
 
         [Test]
         public void VerifyTokensOnExample2()
         {
-            AssertSequenceOfEventsFrom(ParserFor("test2.yaml"),
+            AssertSequenceOfTokensFrom(ScannerFor("test2.yaml"),
                 StreamStart,
-                DocumentStart(Implicit),
                 SingleQuotedScalar("a scalar"),
-                DocumentEnd(Implicit),
                 StreamEnd);
         }
 
         [Test]
         public void VerifyTokensOnExample3()
         {
-            AssertSequenceOfEventsFrom(ParserFor("test3.yaml"),
+            Scanner scanner = ScannerFor("test3.yaml");
+            AssertSequenceOfTokensFrom(scanner,
                 StreamStart,
-                DocumentStart(Explicit),
+                DocumentStart,
                 SingleQuotedScalar("a scalar"),
-                DocumentEnd(Explicit),
+                DocumentEnd,
                 StreamEnd);
         }
 
         [Test]
         public void VerifyTokensOnExample4()
         {
-            AssertSequenceOfEventsFrom(ParserFor("test4.yaml"),
+            AssertSequenceOfTokensFrom(ScannerFor("test4.yaml"),
                 StreamStart,
-                DocumentStart(Implicit),
                 SingleQuotedScalar("a scalar"),
-                DocumentEnd(Implicit),
-                DocumentStart(Explicit),
+                DocumentStart,
                 SingleQuotedScalar("another scalar"),
-                DocumentEnd(Implicit),
-                DocumentStart(Explicit),
+                DocumentStart,
                 SingleQuotedScalar("yet another scalar"),
-                DocumentEnd(Implicit),
                 StreamEnd);
         }
 
         [Test]
         public void VerifyTokensOnExample5()
         {
-            AssertSequenceOfEventsFrom(ParserFor("test5.yaml"),
+            AssertSequenceOfTokensFrom(ScannerFor("test5.yaml"),
                 StreamStart,
-                DocumentStart(Implicit),
-                AnchoredFlowSequenceStart("A"),
+                Anchor("A"),
+                FlowSequenceStart,
                 AnchorAlias("A"),
-                SequenceEnd,
-                DocumentEnd(Implicit),
+                FlowSequenceEnd,
                 StreamEnd);
         }
 
         [Test]
         public void VerifyTokensOnExample6()
         {
-            var parser = ParserFor("test6.yaml");
-            AssertSequenceOfEventsFrom(parser,
+            AssertSequenceOfTokensFrom(ScannerFor("test6.yaml"),
                 StreamStart,
-                DocumentStart(Implicit),
-                ExplicitDoubleQuotedScalar(TagYaml + "float", "3.14"),
-                DocumentEnd(Implicit),
+                Tag("!!", "float"),
+                DoubleQuotedScalar("3.14"),
                 StreamEnd);
         }
 
         [Test]
         public void VerifyTokensOnExample7()
         {
-            AssertSequenceOfEventsFrom(ParserFor("test7.yaml"),
+            AssertSequenceOfTokensFrom(ScannerFor("test7.yaml"),
                 StreamStart,
-                DocumentStart(Explicit),
-                PlainScalar(string.Empty),
-                DocumentEnd(Implicit),
-                DocumentStart(Explicit),
+                DocumentStart,
+                DocumentStart,
                 PlainScalar("a plain scalar"),
-                DocumentEnd(Implicit),
-                DocumentStart(Explicit),
+                DocumentStart,
                 SingleQuotedScalar("a single-quoted scalar"),
-                DocumentEnd(Implicit),
-                DocumentStart(Explicit),
+                DocumentStart,
                 DoubleQuotedScalar("a double-quoted scalar"),
-                DocumentEnd(Implicit),
-                DocumentStart(Explicit),
+                DocumentStart,
                 LiteralScalar("a literal scalar"),
-                DocumentEnd(Implicit),
-                DocumentStart(Explicit),
+                DocumentStart,
                 FoldedScalar("a folded scalar"),
-                DocumentEnd(Implicit),
                 StreamEnd);
         }
 
         [Test]
         public void VerifyTokensOnExample8()
         {
-            AssertSequenceOfEventsFrom(ParserFor("test8.yaml"),
+            AssertSequenceOfTokensFrom(ScannerFor("test8.yaml"),
                 StreamStart,
-                DocumentStart(Implicit),
                 FlowSequenceStart,
                 PlainScalar("item 1"),
+                FlowEntry,
                 PlainScalar("item 2"),
+                FlowEntry,
                 PlainScalar("item 3"),
-                SequenceEnd,
-                DocumentEnd(Implicit),
+                FlowSequenceEnd,
                 StreamEnd);
         }
 
         [Test]
         public void VerifyTokensOnExample9()
         {
-            AssertSequenceOfEventsFrom(ParserFor("test9.yaml"),
+            AssertSequenceOfTokensFrom(ScannerFor("test9.yaml"),
                 StreamStart,
-                DocumentStart(Implicit),
                 FlowMappingStart,
+                Key,
                 PlainScalar("a simple key"),
+                Value,
                 PlainScalar("a value"),
+                FlowEntry,
+                Key,
                 PlainScalar("a complex key"),
+                Value,
                 PlainScalar("another value"),
-                MappingEnd,
-                DocumentEnd(Implicit),
+                FlowEntry,
+                FlowMappingEnd,
                 StreamEnd);
         }
 
         [Test]
         public void VerifyTokensOnExample10()
         {
-            AssertSequenceOfEventsFrom(ParserFor("test10.yaml"),
+            AssertSequenceOfTokensFrom(ScannerFor("test10.yaml"),
                 StreamStart,
-                DocumentStart(Implicit),
                 BlockSequenceStart,
+                BlockEntry,
                 PlainScalar("item 1"),
+                BlockEntry,
                 PlainScalar("item 2"),
+                BlockEntry,
                 BlockSequenceStart,
+                BlockEntry,
                 PlainScalar("item 3.1"),
+                BlockEntry,
                 PlainScalar("item 3.2"),
-                SequenceEnd,
+                BlockEnd,
+                BlockEntry,
                 BlockMappingStart,
+                Key,
                 PlainScalar("key 1"),
+                Value,
                 PlainScalar("value 1"),
+                Key,
                 PlainScalar("key 2"),
+                Value,
                 PlainScalar("value 2"),
-                MappingEnd,
-                SequenceEnd,
-                DocumentEnd(Implicit),
+                BlockEnd,
+                BlockEnd,
                 StreamEnd);
         }
 
         [Test]
         public void VerifyTokensOnExample11()
         {
-            AssertSequenceOfEventsFrom(ParserFor("test11.yaml"),
+            AssertSequenceOfTokensFrom(ScannerFor("test11.yaml"),
                 StreamStart,
-                DocumentStart(Implicit),
                 BlockMappingStart,
+                Key,
                 PlainScalar("a simple key"),
+                Value,
                 PlainScalar("a value"),
+                Key,
                 PlainScalar("a complex key"),
+                Value,
                 PlainScalar("another value"),
+                Key,
                 PlainScalar("a mapping"),
+                Value,
                 BlockMappingStart,
+                Key,
                 PlainScalar("key 1"),
+                Value,
                 PlainScalar("value 1"),
+                Key,
                 PlainScalar("key 2"),
+                Value,
                 PlainScalar("value 2"),
-                MappingEnd,
+                BlockEnd,
+                Key,
                 PlainScalar("a sequence"),
+                Value,
                 BlockSequenceStart,
+                BlockEntry,
                 PlainScalar("item 1"),
+                BlockEntry,
                 PlainScalar("item 2"),
-                SequenceEnd,
-                MappingEnd,
-                DocumentEnd(Implicit),
+                BlockEnd,
+                BlockEnd,
                 StreamEnd);
         }
 
         [Test]
         public void VerifyTokensOnExample12()
         {
-            AssertSequenceOfEventsFrom(ParserFor("test12.yaml"),
+            AssertSequenceOfTokensFrom(ScannerFor("test12.yaml"),
                 StreamStart,
-                DocumentStart(Implicit),
                 BlockSequenceStart,
+                BlockEntry,
                 BlockSequenceStart,
+                BlockEntry,
                 PlainScalar("item 1"),
+                BlockEntry,
                 PlainScalar("item 2"),
-                SequenceEnd,
+                BlockEnd,
+                BlockEntry,
                 BlockMappingStart,
+                Key,
                 PlainScalar("key 1"),
+                Value,
                 PlainScalar("value 1"),
+                Key,
                 PlainScalar("key 2"),
+                Value,
                 PlainScalar("value 2"),
-                MappingEnd,
+                BlockEnd,
+                BlockEntry,
                 BlockMappingStart,
+                Key,
                 PlainScalar("complex key"),
+                Value,
                 PlainScalar("complex value"),
-                MappingEnd,
-                SequenceEnd,
-                DocumentEnd(Implicit),
+                BlockEnd,
+                BlockEnd,
                 StreamEnd);
         }
 
         [Test]
         public void VerifyTokensOnExample13()
         {
-            AssertSequenceOfEventsFrom(ParserFor("test13.yaml"),
+            AssertSequenceOfTokensFrom(ScannerFor("test13.yaml"),
                 StreamStart,
-                DocumentStart(Implicit),
                 BlockMappingStart,
+                Key,
                 PlainScalar("a sequence"),
+                Value,
                 BlockSequenceStart,
+                BlockEntry,
                 PlainScalar("item 1"),
+                BlockEntry,
                 PlainScalar("item 2"),
-                SequenceEnd,
+                BlockEnd,
+                Key,
                 PlainScalar("a mapping"),
+                Value,
                 BlockMappingStart,
+                Key,
                 PlainScalar("key 1"),
+                Value,
                 PlainScalar("value 1"),
+                Key,
                 PlainScalar("key 2"),
+                Value,
                 PlainScalar("value 2"),
-                MappingEnd,
-                MappingEnd,
-                DocumentEnd(Implicit),
+                BlockEnd,
+                BlockEnd,
                 StreamEnd);
         }
 
         [Test]
         public void VerifyTokensOnExample14()
         {
-            AssertSequenceOfEventsFrom(ParserFor("test14.yaml"),
+            AssertSequenceOfTokensFrom(ScannerFor("test14.yaml"),
                 StreamStart,
-                DocumentStart(Implicit),
                 BlockMappingStart,
+                Key,
                 PlainScalar("key"),
-                BlockSequenceStart,
+                Value,
+                BlockEntry,
                 PlainScalar("item 1"),
+                BlockEntry,
                 PlainScalar("item 2"),
-                SequenceEnd,
-                MappingEnd,
-                DocumentEnd(Implicit),
+                BlockEnd,
                 StreamEnd);
         }
 
-        [Test]
-        public void VerifyTokenWithLocalTags()
+        private Scanner ScannerFor(string name)
         {
-            AssertSequenceOfEventsFrom(ParserFor("local-tags.yaml"),
-                StreamStart,
-                DocumentStart(Explicit),
-                TaggedBlockMappingStart("!MyObject"),
-                PlainScalar("a"),
-                PlainScalar("1.0"),
-                PlainScalar("b"),
-                PlainScalar("42"),
-                PlainScalar("c"),
-                PlainScalar("-7"),
-                MappingEnd,
-                DocumentEnd(Implicit),
-                StreamEnd);
+            return new Scanner(YamlFile(name));
         }
 
-        private IParser ParserFor(string name)
+        private void AssertSequenceOfTokensFrom(Scanner scanner, params Token[] tokens)
         {
-            return new Parser(YamlFile(name));
-        }
-
-        private void AssertSequenceOfEventsFrom(IParser parser, params ParsingEvent[] events)
-        {
-            var eventNumber = 1;
-            foreach (var expected in events)
+            var tokenNumber = 1;
+            foreach (var expected in tokens)
             {
-                Assert.True(parser.MoveNext(), "Missing parse event number {0}", eventNumber);
-                AssertEvent(expected, parser.Current, eventNumber);
-                eventNumber++;
+                Assert.True(scanner.MoveNext(), "Missing token number {0}", tokenNumber);
+                AssertToken(expected, scanner.Current, tokenNumber);
+                tokenNumber++;
             }
-            Assert.False(parser.MoveNext(), "Found extra parse events");
+            Assert.False(scanner.MoveNext(), "Found extra tokens");
         }
 
-        private void AssertEvent(ParsingEvent expected, ParsingEvent actual, int eventNumber)
+        private void AssertToken(Token expected, Token actual, int tokenNumber)
         {
-            Assert.AreEqual(expected.GetType(), actual.GetType(), "Parse event {0} is not of the expected type.", eventNumber);
+            Dump.WriteLine(expected.GetType().Name);
+            Assert.NotNull(actual);
+            Assert.AreEqual(expected.GetType(), actual.GetType(), "Token {0} is not of the expected type", tokenNumber);
 
             foreach (var property in expected.GetType().GetProperties())
             {
-                if (property.PropertyType == typeof(Mark) || !property.CanRead)
+                if (property.PropertyType != typeof(Mark) && property.CanRead)
                 {
-                    continue;
-                }
-
-                var value = property.GetValue(actual, null);
-                var expectedValue = property.GetValue(expected, null);
-                if (expectedValue is IEnumerable && !(expectedValue is string))
-                {
-                    Dump.Write("\t{0} = {{", property.Name);
-                    Dump.Write(string.Join(", ", (IEnumerable) value));
-                    Dump.WriteLine("}");
-
-                    if (expectedValue is ICollection && value is ICollection)
-                    {
-                        var expectedCount = ((ICollection) expectedValue).Count;
-                        var valueCount = ((ICollection) value).Count;
-                        Assert.AreEqual(expectedCount, valueCount, "Compared size of collections in property {0} in parse event {1}",
-                            property.Name, eventNumber);
-                    }
-
-                    var values = ((IEnumerable) value).GetEnumerator();
-                    var expectedValues = ((IEnumerable) expectedValue).GetEnumerator();
-                    while (expectedValues.MoveNext())
-                    {
-                        Assert.True(values.MoveNext(), "Property {0} in parse event {1} had too few elements", property.Name, eventNumber);
-                        Assert.AreEqual(expectedValues.Current, values.Current,
-                            "Compared element in property {0} in parse event {1}", property.Name, eventNumber);
-                    }
-                    Assert.False(values.MoveNext(), "Property {0} in parse event {1} had too many elements", property.Name, eventNumber);
-                }
-                else
-                {
+                    var value = property.GetValue(actual, null);
+                    var expectedValue = property.GetValue(expected, null);
                     Dump.WriteLine("\t{0} = {1}", property.Name, value);
-                    Assert.AreEqual(expectedValue, value, "Compared property {0} in parse event {1}", property.Name, eventNumber);
+                    Assert.AreEqual(expectedValue, value, "Comparing property {0} in token {1}", property.Name, tokenNumber);
                 }
             }
         }
