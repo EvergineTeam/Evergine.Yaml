@@ -1,5 +1,5 @@
 name: $(Date:yyyy)$(Date:.M)$(Date:.d)$(Rev:.r)-nightly
-#
+
 trigger: none
 pr: none
 
