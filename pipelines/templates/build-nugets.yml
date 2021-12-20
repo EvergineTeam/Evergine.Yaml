@@ -1,0 +1,50 @@
+﻿parameters:
+  - name: "buildConfiguration"
+    default: "Release"
+    type: string
+  - name: "buildVersion"
+    default: ""
+    type: string
+  - name: "publishEnabled"
+    default: "false"
+    type: string
+  - name: "publishFeed"
+    default: ""
+    type: string
+
+jobs:
+  - job: "BuildNugets"
+    displayName: "Build Nugets"
+    workspace:
+      clean: outputs
+    pool:
+      demands:
+        - msbuild
+    variables:
+      nugetOutputPath: "$(Build.StagingDirectory)/nupkgs"
+
+    steps:
+      - task: DotNetCoreCLI@2
+        displayName: "Generate NuGet packages"
+        inputs:
+          command: pack
+          packagesToPack: Evergine.Yaml/Evergine.Yaml.csproj
+          versioningScheme: byBuildNumber
+          arguments: "--configuration ${{ parameters.buildConfiguration }}"
+          packDirectory: $(nugetOutputPath)
+
+      - task: PublishBuildArtifacts@1
+        displayName: "Publish Artifact: NuGets"
+        inputs:
+          PathtoPublish: "$(nugetOutputPath)"
+          ArtifactName: NuGets
+
+      - task: NuGetCommand@2
+        displayName: "Push NuGet to feed"
+        enabled: ${{ parameters.publishEnabled }}
+        condition: and(succeeded(), ne('${{ parameters.publishFeed }}', ''))
+        inputs:
+          command: push
+          packagesToPush: "$(nugetOutputPath)/**/*.nupkg;!$(nugetOutputPath)/**/*.snupkg"
+          nuGetFeedType: external
+          publishFeedCredentials: ${{ parameters.publishFeed }}
