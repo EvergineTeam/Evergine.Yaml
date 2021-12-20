@@ -22,6 +22,7 @@ jobs:
         - msbuild
     variables:
       nugetOutputPath: "$(Build.StagingDirectory)/nupkgs"
+      buildVersion: ${{ parameters.buildVersion }}
 
     steps:
       - task: DotNetCoreCLI@2
@@ -29,7 +30,8 @@ jobs:
         inputs:
           command: pack
           packagesToPack: Evergine.Yaml/Evergine.Yaml.csproj
-          versioningScheme: byBuildNumber
+          versioningScheme: byEnvVar
+          versionEnvVar: buildVersion
           arguments: "--configuration ${{ parameters.buildConfiguration }}"
           packDirectory: $(nugetOutputPath)
 
