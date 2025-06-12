@@ -200,6 +200,8 @@ namespace SharpYaml.Serialization.Serializers
             {
                 if (!objectContext.Settings.IgnoreUnmatchedProperties) 
                     throw new YamlException(memberScalar.Start, memberScalar.End, "Unable to deserialize property [{0}] not found in type [{1}]".DoFormat(memberName, objectContext.Descriptor));
+                else
+                    objectContext.Reader.Skip(objectContext.Reader.CurrentDepth);
             }
         }
 

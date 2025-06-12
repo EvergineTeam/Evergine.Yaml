@@ -827,6 +827,24 @@ Mother:
             });
         }
 
+        [Test]
+        public void DeserializeDoesNotThrowWithNonPrimitiveIgnoreUnmatchedProperties()
+        {
+            var serializer = new Serializer(new SerializerSettings { IgnoreUnmatchedProperties = true });
+            var yaml = @"---
+Mother:  
+  Name: Name1
+Father:
+  Name: Name2
+Dog:
+  Name: Name3
+...";
+
+            var family = serializer.Deserialize<Family>(yaml);
+            Assert.AreEqual("Name1", family.Mother.Name);
+            Assert.AreEqual("Name2", family.Father.Name);
+        }
+
         private class OnlyGenericDictionary : IDictionary<string, string>
         {
             private readonly Dictionary<string, string> _dictionary = new Dictionary<string, string>();
