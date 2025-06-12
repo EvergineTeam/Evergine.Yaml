@@ -41,6 +41,11 @@ jobs:
           PathtoPublish: "$(nugetOutputPath)"
           ArtifactName: NuGets
 
+      # Manually installing mono in Ubuntu as it is no longer supplied by DevOps image
+      # https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/nuget-command-v2?view=azure-pipelines#migrating-to-net-cli-on-ubuntu
+      - script: | 
+          sudo apt install mono-devel
+
       - task: NuGetCommand@2
         displayName: "Push NuGet to feed"
         enabled: ${{ parameters.publishEnabled }}
